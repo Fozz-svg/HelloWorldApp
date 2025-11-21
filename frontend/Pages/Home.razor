@@ -1,7 +1,27 @@
 ﻿@page "/"
+@inject HttpClient Http
 
-<PageTitle>Home</PageTitle>
+<h3>Hello World</h3>
 
-<h1>Hello, world!</h1>
+<input @bind="message" placeholder="Enter text" />
+<button @onclick="Save">Save</button>
 
-Welcome to your new app.
+<InputFile OnChange="Upload" />
+
+<p>@status</p>
+
+@code {
+    private string message = string.Empty;
+    private string status = string.Empty;
+
+    private void Save()
+    {
+        status = $"Saved: {message}";
+    }
+
+    private void Upload(InputFileChangeEventArgs e)
+    {
+        IBrowserFile file = e.File;
+        status = $"Uploaded file: {file.Name} ({file.Size} bytes)";
+    }
+}
