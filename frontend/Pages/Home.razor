@@ -14,14 +14,61 @@
     private string message = string.Empty;
     private string status = string.Empty;
 
-    private void Save()
+    private async Task Save()
     {
-        status = $"Saved: {message}";
+        var msg = new Message { Content = message };
+        var response = await Http.PostAsJsonAsync("api/message", msg);
+
+        if (response.IsSuccessStatusCode)
+        {
+            status = $"Saved to DB: {message}";
+            message = string.Empty; // Clear input
+        }
+        else
+        {
+            status = $"Save failed: {response.ReasonPhrase}";
+        }
     }
 
-    private void Upload(InputFileChangeEventArgs e)
+    private class Message
     {
-        IBrowserFile file = e.File;
-        status = $"Uploaded file: {file.Name} ({file.Size} bytes)";
+        public int Id { get; set; }
+        public string? Content { get; set; }
+    }
+
+    private async Task Upload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        status = $"Uploading {file.Name}...";
+
+        try
+        {
+            long maxFileSize = 1024 * 1024 * 15; // 15 MB
+            using var content = new MultipartFormDataContent();
+            using var fileStream = file.OpenReadStream(maxFileSize);
+            using var streamContent = new StreamContent(fileStream);
+            content.Add(streamContent, "file", file.Name);
+
+            var response = await Http.PostAsync("api/upload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<UploadResponse>();
+                status = $"Upload success! URL: {result?.Url}";
+            }
+            else
+            {
+                status = $"Upload failed: {response.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            status = $"Error: {ex.Message}";
+        }
+    }
+
+    private class UploadResponse
+    {
+        public string? Url { get; set; }
     }
 }
