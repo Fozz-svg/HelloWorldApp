@@ -6,6 +6,10 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5160") });
+var apiUrl = builder.HostEnvironment.IsDevelopment()
+    ? "http://localhost:5160"
+    : "https://helloworldapi.azurewebsites.net";
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiUrl) });
 
 await builder.Build().RunAsync();
