@@ -32,6 +32,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Auto-create database on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+}
+
 app.UseCors("AllowAll");
 
 app.MapControllers();
