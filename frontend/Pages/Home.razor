@@ -16,7 +16,7 @@
 
     private async Task Save()
     {
-        var msg = new Message { Content = message };
+        var msg = new Message { Text = message };
         var response = await Http.PostAsJsonAsync("api/message", msg);
 
         if (response.IsSuccessStatusCode)
@@ -33,7 +33,7 @@
     private class Message
     {
         public int Id { get; set; }
-        public string? Content { get; set; }
+        public string? Text { get; set; }
     }
 
     private async Task Upload(InputFileChangeEventArgs e)

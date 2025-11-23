@@ -11,8 +11,10 @@ public class MessageController : ControllerBase {
 
   [HttpPost]
   public async Task<IActionResult> Post([FromBody] Message msg) {
+    Console.WriteLine($"[DEBUG] Received message - Id: {msg.Id}, Text: '{msg.Text}', Text Length: {msg.Text?.Length ?? 0}");
     _db.Messages.Add(msg);
     await _db.SaveChangesAsync();
+    Console.WriteLine($"[DEBUG] Saved message - Id: {msg.Id}, Text: '{msg.Text}'");
     return Ok(msg);
   }
 

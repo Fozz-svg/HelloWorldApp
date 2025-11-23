@@ -40,6 +40,7 @@ _ReSharper*/
 
 # Azure Functions local settings
 local.settings.json
+__blobstorage__/
 
 # Node-related (if you add JS tooling later)
 node_modules/
