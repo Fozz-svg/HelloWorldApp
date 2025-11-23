@@ -32,21 +32,27 @@ jobs:
       - name: Publish Backend
         run: dotnet publish backend/backend.csproj -c Release -o backend/publish
 
+      - name: Zip Backend
+        run: cd backend/publish && zip -r ../../backend.zip .
+
       - name: Deploy Web App
         run: |
           az webapp deploy \
             --name helloworldapi \
             --resource-group helloworldrg \
-            --src-path backend/publish \
+            --src-path backend.zip \
             --type zip
 
       # --- Worker ---
       - name: Publish Worker
         run: dotnet publish worker/worker.csproj -c Release -o worker/publish
 
+      - name: Zip Worker
+        run: cd worker/publish && zip -r ../../worker.zip .
+
       - name: Deploy Function App
         run: |
           az functionapp deployment source config-zip \
             --name helloworldworker \
             --resource-group helloworldrg \
-            --src worker/publish
+            --src worker.zip
