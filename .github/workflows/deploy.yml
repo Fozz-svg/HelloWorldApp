@@ -16,6 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
       - name: Azure Login (OIDC)
         uses: azure/login@v1
         with:
@@ -23,17 +28,25 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      # --- Backend ---
+      - name: Publish Backend
+        run: dotnet publish backend/backend.csproj -c Release -o backend/publish
+
       - name: Deploy Web App
         run: |
           az webapp deploy \
             --name helloworldapi \
             --resource-group helloworldrg \
-            --src-path . \
+            --src-path backend/publish \
             --type zip
+
+      # --- Worker ---
+      - name: Publish Worker
+        run: dotnet publish worker/worker.csproj -c Release -o worker/publish
 
       - name: Deploy Function App
         run: |
           az functionapp deployment source config-zip \
             --name helloworldworker \
             --resource-group helloworldrg \
-            --src ./
+            --src worker/publish
