@@ -2,6 +2,7 @@ using Backend.Data;
 using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
 
+Console.WriteLine("--- BACKEND STARTING (VERSION: DEBUG-ROUTE) ---");
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -52,6 +53,7 @@ catch (Exception ex)
 app.UseCors("AllowAll");
 
 app.MapGet("/health", () => "OK");
+app.MapGet("/{*path}", (string path) => $"Catch-All Echo: /{path}");
 
 app.MapControllers();
 app.Run();
