@@ -41,6 +41,8 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors("AllowAll");
 
+app.MapGet("/health", () => "OK");
+
 app.MapControllers();
 app.Run();
 
