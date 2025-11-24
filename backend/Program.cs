@@ -33,10 +33,20 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Auto-create database on startup
-using (var scope = app.Services.CreateScope())
+// Auto-create database on startup
+try 
 {
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        Console.WriteLine("Attempting DB connection...");
+        db.Database.EnsureCreated();
+        Console.WriteLine("DB Connection Successful!");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"DB Error: {ex.Message}");
 }
 
 app.UseCors("AllowAll");
