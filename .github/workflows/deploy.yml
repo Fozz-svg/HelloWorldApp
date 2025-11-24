@@ -30,7 +30,7 @@ jobs:
 
       # --- Backend ---
       - name: Publish Backend
-        run: dotnet publish backend/backend.csproj -c Release -o backend/publish
+        run: dotnet publish backend/backend.csproj -c Release -r win-x86 --self-contained false -o backend/publish
 
       - name: Zip Backend
         run: cd backend/publish && zip -r ../../backend.zip .
@@ -45,7 +45,7 @@ jobs:
 
       # --- Worker ---
       - name: Publish Worker
-        run: dotnet publish worker/worker.csproj -c Release -o worker/publish
+        run: dotnet publish worker/worker.csproj -c Release -r win-x86 --self-contained false -o worker/publish
 
       - name: Zip Worker
         run: cd worker/publish && zip -r ../../worker.zip .
