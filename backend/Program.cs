@@ -35,7 +35,6 @@ var app = builder.Build();
 
 // Auto-create database on startup
 // TEMPORARILY DISABLED FOR TESTING
-/*
 try 
 {
     using (var scope = app.Services.CreateScope())
@@ -50,8 +49,6 @@ catch (Exception ex)
 {
     Console.WriteLine($"DB Error: {ex.Message}");
 }
-*/
-Console.WriteLine("Skipping DB initialization for testing");
 
 app.UseCors("AllowAll");
 
