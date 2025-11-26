@@ -60,7 +60,6 @@ Console.WriteLine("Skipping DB initialization for testing");
 app.UseCors("AllowAll");
 
 app.MapGet("/health", () => "OK");
-app.MapGet("/{*path}", (string path) => $"Catch-All Echo: /{path}");
 
 app.MapControllers();
 app.Run();
