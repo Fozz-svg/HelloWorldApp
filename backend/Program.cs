@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 Console.WriteLine("--- BACKEND STARTING (VERSION: DEBUG-ROUTE) ---");
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure URLs for Azure App Service
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://*:{port}");
+
 builder.Services.AddControllers();
 builder.Services.AddApplicationInsightsTelemetry();
 
